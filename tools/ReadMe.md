@@ -1,3 +1,19 @@
+## This tool can perform the following tasks
+
+1.Load a .csv or .xls/xlsx file with time and allele data.
+
+2.If it has distances → tick “Has Distance Column”.
+
+3.Click “Plot Mean” to preview trends.
+
+4.Use “Plot Paired/Unpaired” or “Plot Instantaneous”
+
+5.Try “Plot Cross-Covariance” to explore signal correlations.
+
+6.It also generates random unpaired datasets and plots their correlations.
+
+7.Clear and Save plots as needed.
+
 
 ### To Launch run the Python script:
 
