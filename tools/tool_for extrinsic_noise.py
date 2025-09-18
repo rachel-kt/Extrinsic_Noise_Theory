@@ -47,7 +47,7 @@ class MainWindow(QMainWindow):
         self.has_distance_cb.setChecked(False)  # default unchecked
         left_layout.addWidget(self.has_distance_cb)
 
-        self.load_btn = QPushButton("Load CSV")
+        self.load_btn = QPushButton("Load File")
         self.load_btn.clicked.connect(self.load_csv)
         left_layout.addWidget(self.load_btn)
 
@@ -90,7 +90,7 @@ class MainWindow(QMainWindow):
 
     def load_csv(self):
         file_path, _ = QFileDialog.getOpenFileName(
-            self, "Open CSV", "", "CSV Files (*.csv);;All Files (*)"
+            self, "Open File", "", "CSV Files (*.csv);;All Files (*)"
         )
         if file_path:
             try:
@@ -115,6 +115,12 @@ class MainWindow(QMainWindow):
                     Y = data[:, 0::3]
                     D = data[:, 2::3]
                     print(f"Loaded with distances: X={X.shape}, Y={Y.shape}, D={D.shape}")
+                    
+                    # Symmetrize
+                    self.X = np.hstack([X, data[:, 0::3]])
+                    self.Y = np.hstack([Y, data[:, 1::3]])
+                    self.D = np.hstack([D, D])
+
                 else:
                     # Extract paired X and Y, then symmetrize
                     X = data[:, 1::2]
@@ -122,11 +128,13 @@ class MainWindow(QMainWindow):
                     # self.X = np.hstack([X, data[:, 0::2]])
                     # self.Y = np.hstack([Y, data[:, 1::2]])
                     # D = None
+                    
+                    # Symmetrize
+                    self.X = np.hstack([X, data[:, 0::2]])
+                    self.Y = np.hstack([Y, data[:, 1::2]])
                     print(f"Loaded without distances: X={X.shape}, Y={Y.shape}")
 
-                # Symmetrize
-                self.X = np.hstack([X, data[:, 0::2]])
-                self.Y = np.hstack([Y, data[:, 1::2]])
+
 
                 self.data_loaded = True
                 self.plot_mean_btn.setEnabled(True)
@@ -199,6 +207,10 @@ class MainWindow(QMainWindow):
         try:
             self.save_btn.setEnabled(True)
             X, Y, time = self.X, self.Y, self.time
+            
+            tmin = 0 * 60
+            ind = time > tmin
+            X, Y, time = X[ind, :], Y[ind, :], time[ind]
 
             # --- Paired calculations ---
             mxdiffy = np.mean((X - Y) ** 2, axis=1) / 2
