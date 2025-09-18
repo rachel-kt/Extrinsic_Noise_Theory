@@ -16,7 +16,9 @@
 
 
 ### To Launch run the Python script:
-
+### install the PyQt5 package in your environement
+pip install PyQt5
+### run the file using your python3 installation, here python may be replaced by py or something else
 python tool_for extrinsic_noise.py
 
 ### Loading Data
